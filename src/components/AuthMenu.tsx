@@ -3,7 +3,7 @@
 import Link from "next/link";
 import type { FormEvent, MouseEvent as ReactMouseEvent } from "react";
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   clearSession,
   createUserId,
@@ -35,6 +35,7 @@ function clearGuestShopData() {
 
 export default function AuthMenu() {
   const router = useRouter();
+  const pathname = usePathname();
   const shellRef = useRef<HTMLDivElement | null>(null);
   const [session, setSession] = useState<SessionUser | null>(null);
   const [authOpen, setAuthOpen] = useState(false);
@@ -43,6 +44,16 @@ export default function AuthMenu() {
   const [view, setView] = useState<AuthView>("login");
   const [message, setMessage] = useState("");
   const [redirectAfterAuth, setRedirectAfterAuth] = useState<string | null>(null);
+
+  const isAccountPage =
+    pathname.startsWith("/profile") ||
+    pathname.startsWith("/orders") ||
+    pathname.startsWith("/checkout") ||
+    pathname.startsWith("/admin");
+
+  const isProfilePage = pathname.startsWith("/profile");
+  const isOrdersPage = pathname.startsWith("/orders");
+  const isAdminPage = pathname.startsWith("/admin");
 
   function openRequestedAuth(detail?: OpenAuthDetail) {
     const nextRole: AuthRole = detail?.role === "admin" ? "admin" : "user";
@@ -261,7 +272,7 @@ export default function AuthMenu() {
   if (!session) {
     return (
       <div className="auth-shell" ref={shellRef}>
-        <button type="button" className="auth-trigger" onClick={openAuth}>
+        <button type="button" className={isAccountPage ? "auth-trigger active" : "auth-trigger"} onClick={openAuth}>
           Кабінет
         </button>
 
@@ -315,12 +326,12 @@ export default function AuthMenu() {
 
                 <label>
                   Email
-                  <input name="email" type="email" required placeholder="lune@gmail.com"/>
+                  <input name="email" type="email" required placeholder="lune@gmail.com" />
                 </label>
 
                 <label>
                   Пароль
-                  <input name="password" type="password" required placeholder="пароль"/>
+                  <input name="password" type="password" required placeholder="пароль" />
                 </label>
 
                 <button className="btn btn-primary" type="submit">
@@ -338,7 +349,11 @@ export default function AuthMenu() {
 
   return (
     <div className="auth-shell" ref={shellRef}>
-      <button type="button" className="auth-user-button" onClick={() => setMenuOpen((current) => !current)}>
+      <button
+        type="button"
+        className={isAccountPage ? "auth-user-button active" : "auth-user-button"}
+        onClick={() => setMenuOpen((current) => !current)}
+      >
         <img src={session.photo || "/logo-pic.png"} alt={getFullName(session)} />
         <span>{getFullName(session)}</span>
       </button>
@@ -357,21 +372,24 @@ export default function AuthMenu() {
 
           {session.role === "user" ? (
             <div className="auth-menu-list">
-              <Link className="auth-menu-link" href="/profile" onClick={() => setMenuOpen(false)}>
+              <Link className={isProfilePage ? "auth-menu-link active" : "auth-menu-link"} href="/profile" onClick={() => setMenuOpen(false)}>
                 Профіль
               </Link>
-              <Link className="auth-menu-link" href="/orders" onClick={() => setMenuOpen(false)}>
+
+              <Link className={isOrdersPage ? "auth-menu-link active" : "auth-menu-link"} href="/orders" onClick={() => setMenuOpen(false)}>
                 Мої замовлення
               </Link>
+
               <button type="button" className="auth-menu-item danger" onClick={logout}>
                 Вийти
               </button>
             </div>
           ) : (
             <div className="auth-menu-list">
-              <Link className="auth-menu-link" href="/admin" onClick={() => setMenuOpen(false)}>
+              <Link className={isAdminPage ? "auth-menu-link active" : "auth-menu-link"} href="/admin" onClick={() => setMenuOpen(false)}>
                 Адмін панель
               </Link>
+
               <button type="button" className="auth-menu-item danger" onClick={logout}>
                 Вийти
               </button>

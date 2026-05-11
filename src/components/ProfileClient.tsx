@@ -143,12 +143,13 @@ export default function ProfileClient() {
   }
 
   if (!user) {
-    return (
-      <section className="page-section">
-        <p className="muted">Завантаження профілю...</p>
-      </section>
-    );
-  }
+  return (
+    <div className="inline-loader">
+      <img src="/logo-pic.png" alt="LUNÉ" />
+      <p>Завантаження</p>
+    </div>
+  );
+}
 
   return (
     <section className="page-section account-page">

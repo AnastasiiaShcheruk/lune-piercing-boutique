@@ -43,12 +43,13 @@ export default function OrdersClient() {
   }, [router]);
 
   if (!user) {
-    return (
-      <section className="page-section">
-        <p className="muted">Завантаження...</p>
-      </section>
-    );
-  }
+  return (
+    <div className="inline-loader">
+      <img src="/logo-pic.png" alt="LUNÉ" />
+      <p>Завантаження</p>
+    </div>
+  );
+}
 
   return (
     <section className="page-section account-page">
@@ -59,7 +60,10 @@ export default function OrdersClient() {
       </div>
 
       {loading ? (
-        <p className="muted">Завантаження замовлень...</p>
+        <div className="inline-loader">
+      <img src="/logo-pic.png" alt="LUNÉ" />
+      <p>Завантаження</p>
+    </div>
       ) : orders.length === 0 ? (
         <div className="empty-state orders-empty-page">
           <h2>Замовлень поки немає</h2>
@@ -85,7 +89,7 @@ export default function OrdersClient() {
                   <div className="order-product" key={item.id}>
                     <img src={item.product.image} alt={item.product.name} />
                     <div>
-                      <Link href={`/product/${item.product.id}`}>
+                      <Link href={`/product/${item.product.slug}`}>
                         {item.product.name}
                       </Link>
                       <span>{item.quantity} шт. × {formatPrice(item.unitPrice)}</span>

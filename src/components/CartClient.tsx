@@ -79,11 +79,22 @@ export default function CartClient() {
     loadCart();
   }, []);
 
-  if (loading) return <p className="muted">Завантаження кошика...</p>;
+  if (loading) {
+    return (
+      <div className="inline-loader">
+        <div className="inline-loader-stars">✧ ✦ ✧</div>
+        <img src="/logo-pic.png" alt="LUNÉ" />
+        <img className="inline-loader-name" src="/name.png" alt="LUNÉ Piercing Boutique" />
+        <p>Завантаження</p>
+      </div>
+    );
+  }
 
   if (items.length === 0) {
     return (
-      <div className="empty-state">
+      <div className="empty-state luxe-empty-state cart-empty-state">
+        <img className="luxe-empty-logo" src="/logo-pic.png" alt="LUNÉ" />
+        <img className="luxe-empty-name" src="/name.png" alt="LUNÉ Piercing Boutique" />
         <h2>Кошик порожній</h2>
         <p>Додай прикраси з каталогу, щоб оформити замовлення.</p>
         <Link className="btn btn-primary" href="/catalog">
