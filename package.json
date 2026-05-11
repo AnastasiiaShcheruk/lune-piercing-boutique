@@ -1,0 +1,31 @@
+{
+  "name": "lune-piercing-boutique",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "prisma generate && next build",
+    "start": "next start",
+    "db:push": "prisma db push",
+    "db:seed": "tsx prisma/seed.ts",
+    "db:sql": "tsx prisma/applyCustomSql.ts",
+    "db:studio": "prisma studio"
+  },
+  "dependencies": {
+    "@prisma/client": "6",
+    "dotenv": "^17.4.2",
+    "next": "15",
+    "pg": "^8.13.1",
+    "react": "19",
+    "react-dom": "19"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@types/pg": "^8.11.10",
+    "@types/react": "^19.0.2",
+    "@types/react-dom": "^19.0.2",
+    "prisma": "6",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}
