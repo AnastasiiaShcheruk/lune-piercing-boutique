@@ -7,12 +7,15 @@ import ProfileImageUpload from "@/components/ProfileImageUpload";
 import {
   getFullName,
   getSession,
-  getUsers,
   normalizePhoto,
-  normalizeSession,
-  updateStoredUser
+  saveSession
 } from "@/lib/authStorage";
 import type { SessionUser } from "@/lib/types";
+
+type ProfileResponse = {
+  user?: SessionUser;
+  error?: string;
+};
 
 function isValidPersonName(value: string) {
   return /^[A-Za-zА-Яа-яІіЇїЄєҐґ'’ -]{2,40}$/.test(value);
@@ -42,6 +45,7 @@ export default function ProfileClient() {
   const [user, setUser] = useState<SessionUser | null>(null);
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState<"success" | "error">("success");
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     const session = getSession();
@@ -64,7 +68,7 @@ export default function ProfileClient() {
     setMessage(text);
   }
 
-  function saveProfile(event: FormEvent<HTMLFormElement>) {
+  async function saveProfile(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     if (!user) return;
@@ -113,44 +117,55 @@ export default function ProfileClient() {
       return;
     }
 
-    const emailExists = getUsers().some((storedUser) => storedUser.role === "user" && storedUser.id !== user.id && storedUser.email === email);
+    setSaving(true);
+    setMessage("");
 
-    if (emailExists) {
-      showError("Користувач з таким email вже існує");
-      return;
+    try {
+      const response = await fetch("/api/profile", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          id: user.id,
+          firstName,
+          lastName,
+          email,
+          phone,
+          city,
+          address,
+          photo
+        })
+      });
+
+      const data = (await response.json()) as ProfileResponse;
+
+      if (!response.ok || !data.user) {
+        showError(data.error || "Не вдалося оновити профіль");
+        setSaving(false);
+        return;
+      }
+
+      saveSession(data.user);
+      setUser(data.user);
+      showSuccess("Профіль оновлено");
+      router.refresh();
+    } catch {
+      showError("Не вдалося з’єднатися з сервером");
     }
 
-    const updatedUser = normalizeSession({
-      ...user,
-      firstName,
-      lastName,
-      name: `${firstName} ${lastName}`.trim(),
-      email,
-      photo,
-      phone,
-      city,
-      address
-    });
-
-    if (!updatedUser) {
-      showError("Не вдалося оновити профіль");
-      return;
-    }
-
-    updateStoredUser(updatedUser);
-    setUser(updatedUser);
-    showSuccess("Профіль оновлено");
+    setSaving(false);
   }
 
   if (!user) {
-  return (
-    <div className="inline-loader">
+    return (
+      <div className="inline-loader">
         <img src="/logo-pic.png" alt="LUNÉ" />
         <img className="inline-loader-name" src="/name.png" alt="LUNÉ Piercing Boutique" />
         <p>Завантаження</p>
       </div>
-  );
-}
+    );
+  }
 
   return (
     <section className="page-section account-page">
@@ -209,8 +224,8 @@ export default function ProfileClient() {
           </div>
 
           <div className="account-actions">
-            <button className="btn btn-primary" type="submit">
-              Зберегти зміни
+            <button className="btn btn-primary" type="submit" disabled={saving}>
+              {saving ? "Збереження..." : "Зберегти зміни"}
             </button>
 
             {message && (
