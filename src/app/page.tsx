@@ -26,15 +26,15 @@ export default async function Home() {
       <section className="hero">
         <div className="hero-content">
           <p className="eyebrow">Прикраси для твоєї унікальної краси</p>
-          <h1>LUNÉ Piercing Boutique</h1>
-          <p>Темний beauty-бутік для підбору стильних прикрас для пірсингу: кілець, лабретів, штанг, бананів та засобів для догляду.</p>
+          <img src="/name.png" alt="LUNÉ Piercing Boutique" />
+          <h1>Piercing Boutique</h1>
+          <p>опис тексту додати</p>
           <div className="hero-actions">
             <Link className="btn btn-primary" href="/catalog">Переглянути каталог</Link>
-            <Link className="btn btn-ghost" href="/admin">Адмін-панель</Link>
           </div>
         </div>
         <div className="hero-logo">
-          <img src="/logo.png" alt="LUNÉ Piercing Boutique" />
+          <img src="/logo-pic.png" alt="LUNÉ Piercing Boutique" />
         </div>
       </section>
 

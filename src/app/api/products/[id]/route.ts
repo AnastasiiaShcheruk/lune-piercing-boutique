@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import type { Category, Product } from "@prisma/client";
-import { prisma } from "../../../lib/prisma";
+import { prisma } from "../../../../lib/prisma";
 
 export const dynamic = "force-dynamic";
 
@@ -34,36 +34,15 @@ function mapProduct(product: ProductWithCategory) {
   };
 }
 
-export async function GET(request: NextRequest) {
-  const ids = request.nextUrl.searchParams.get("ids");
-
-  const products = await prisma.product.findMany({
-    where: ids
-      ? {
-          id: {
-            in: ids
-              .split(",")
-              .map((id) => Number(id))
-              .filter((id) => Number.isInteger(id))
-          }
-        }
-      : undefined,
-    include: {
-      category: true
-    },
-    orderBy: {
-      createdAt: "desc"
-    }
-  });
-
-  return NextResponse.json(products.map(mapProduct));
-}
-
-export async function POST(request: NextRequest) {
+export async function PATCH(request: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await context.params;
     const payload = await request.json();
 
-    const product = await prisma.product.create({
+    const product = await prisma.product.update({
+      where: {
+        id: Number(id)
+      },
       data: {
         name: String(payload.name || "").trim(),
         slug: String(payload.slug || "").trim(),
@@ -87,7 +66,24 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(mapProduct(product));
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Не вдалося створити товар";
+    const message = error instanceof Error ? error.message : "Не вдалося оновити товар";
+    return NextResponse.json({ error: message }, { status: 400 });
+  }
+}
+
+export async function DELETE(_request: NextRequest, context: { params: Promise<{ id: string }> }) {
+  try {
+    const { id } = await context.params;
+
+    await prisma.product.delete({
+      where: {
+        id: Number(id)
+      }
+    });
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Не вдалося видалити товар";
     return NextResponse.json({ error: message }, { status: 400 });
   }
 }
