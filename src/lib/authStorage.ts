@@ -14,7 +14,7 @@ export const defaultAdmin: StoredUser = {
   lastName: "LUNÉ",
   name: "Адміністратор LUNÉ",
   email: "admin@lune.ua",
-  password: "admin123",
+  password: "adminNa55",
   photo: "/logo-pic.png",
   phone: "",
   city: "",
