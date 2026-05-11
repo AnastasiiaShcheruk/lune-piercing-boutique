@@ -96,7 +96,6 @@ export default async function Catalog({
       <div className="section-heading center">
         <p className="eyebrow">Каталог</p>
         <h1>Товари для пірсингу</h1>
-        <p>Фільтруй прикраси за категоріями, назвою та ціною.</p>
       </div>
 
       <form className="catalog-filters">

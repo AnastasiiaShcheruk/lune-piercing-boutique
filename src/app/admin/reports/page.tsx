@@ -42,8 +42,8 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
   return (
     <section className="page-section">
       <div className="section-heading center">
-        <p className="eyebrow">NativeSQL</p>
-        <h1>Звіти та процедура</h1>
+        <p className="eyebrow">Адмін-панель</p>
+        <h1>Звіти</h1>
       </div>
 
       <div className="table-card">
