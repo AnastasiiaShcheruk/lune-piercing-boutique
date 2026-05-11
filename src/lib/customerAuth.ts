@@ -48,19 +48,18 @@ export function customerToSession(customer: {
 }
 
 export async function ensureDemoCustomer() {
-  return prisma.customer.upsert({
+  const existingCustomer = await prisma.customer.findUnique({
     where: {
       email: demoCustomer.email
-    },
-    update: {
-      name: demoCustomer.name,
-      password: demoCustomer.password,
-      phone: demoCustomer.phone,
-      city: demoCustomer.city,
-      address: demoCustomer.address,
-      photo: demoCustomer.photo
-    },
-    create: {
+    }
+  });
+
+  if (existingCustomer) {
+    return existingCustomer;
+  }
+
+  return prisma.customer.create({
+    data: {
       name: demoCustomer.name,
       email: demoCustomer.email,
       password: demoCustomer.password,
