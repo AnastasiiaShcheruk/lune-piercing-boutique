@@ -6,6 +6,7 @@ import { getFullName, getSession, normalizeSession, updateStoredUser } from "@/l
 import type { CartItem, SessionUser } from "@/lib/types";
 
 type DeliveryMethod = "branch" | "postomat";
+type PaymentMethod = "card" | "cash";
 
 type CustomerForm = {
   firstName: string;
@@ -93,6 +94,7 @@ export default function CheckoutClient() {
   const [session, setSession] = useState<SessionUser | null>(null);
   const [customer, setCustomer] = useState<CustomerForm>(emptyCustomer);
   const [deliveryMethod, setDeliveryMethod] = useState<DeliveryMethod>("branch");
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("card");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -163,8 +165,13 @@ export default function CheckoutClient() {
     const address = String(formData.get("address") || "").trim();
     const comment = String(formData.get("comment") || "").trim();
     const selectedDelivery = String(formData.get("deliveryMethod") || "branch") as DeliveryMethod;
+    const selectedPayment = String(formData.get("paymentMethod") || "card") as PaymentMethod;
     const currentDeliveryTitle = selectedDelivery === "postomat" ? "Поштомат Нової пошти" : "Відділення Нової пошти";
+    const currentPaymentTitle = selectedPayment === "cash" ? "Оплата при отриманні" : "Оплата на картку";
     const fullAddress = `${currentDeliveryTitle}: ${address}`;
+    const fullComment = comment
+      ? `Спосіб оплати: ${currentPaymentTitle}. Коментар: ${comment}`
+      : `Спосіб оплати: ${currentPaymentTitle}`;
 
     if (!isValidName(firstName)) {
       setMessage("Ім’я має містити тільки літери, дефіс або апостроф і бути від 2 до 40 символів");
@@ -215,7 +222,7 @@ export default function CheckoutClient() {
         city,
         address: fullAddress
       },
-      comment,
+      comment: fullComment,
       items
     };
 
@@ -394,6 +401,34 @@ export default function CheckoutClient() {
             onChange={(event) => changeCustomer("address", event.target.value)}
           />
         </label>
+
+        <div className="checkout-delivery wide">
+          <span className="checkout-delivery-title">Спосіб оплати</span>
+
+          <div className="checkout-delivery-options">
+            <label className={paymentMethod === "card" ? "active" : ""}>
+              <input
+                type="radio"
+                name="paymentMethod"
+                value="card"
+                checked={paymentMethod === "card"}
+                onChange={() => setPaymentMethod("card")}
+              />
+              <span>Оплата на картку</span>
+            </label>
+
+            <label className={paymentMethod === "cash" ? "active" : ""}>
+              <input
+                type="radio"
+                name="paymentMethod"
+                value="cash"
+                checked={paymentMethod === "cash"}
+                onChange={() => setPaymentMethod("cash")}
+              />
+              <span>При отриманні</span>
+            </label>
+          </div>
+        </div>
 
         <label className="wide">
           Коментар

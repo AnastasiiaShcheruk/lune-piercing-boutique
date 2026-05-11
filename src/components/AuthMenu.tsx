@@ -320,7 +320,7 @@ export default function AuthMenu() {
 
                 <label>
                   Пароль
-                  <input name="password" type="password" required placeholder="+380********"/>
+                  <input name="password" type="password" required placeholder="пароль"/>
                 </label>
 
                 <button className="btn btn-primary" type="submit">

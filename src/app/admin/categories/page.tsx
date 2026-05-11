@@ -159,7 +159,6 @@ export default async function AdminCategoriesPage() {
       <div className="section-heading center">
         <p className="eyebrow">Адмін-панель</p>
         <h1>Категорії</h1>
-        <p>Керування категоріями товарів для каталогу LUNÉ Piercing Boutique.</p>
       </div>
 
       <div className="admin-category-layout">
@@ -168,7 +167,7 @@ export default async function AdminCategoriesPage() {
 
           <label>
             Назва
-            <input name="name" required placeholder="Наприклад, Кільця" />
+            <input name="name" required placeholder="Кільця" />
           </label>
 
           <label>
@@ -176,7 +175,7 @@ export default async function AdminCategoriesPage() {
             <textarea
               name="description"
               rows={5}
-              placeholder="Наприклад, Стильні кільця для септуму, губ, вуха та інших видів пірсингу."
+              placeholder="Кільця для септуму, губ, вуха та інших видів пірсингу."
             />
           </label>
 
@@ -202,7 +201,7 @@ export default async function AdminCategoriesPage() {
                 <div className="form-grid">
                   <label>
                     Назва
-                    <input name="name" required defaultValue={category.name} placeholder="Наприклад, Лабрети" />
+                    <input name="name" required defaultValue={category.name} placeholder="Лабрети" />
                   </label>
 
                   <label className="wide">
@@ -211,7 +210,7 @@ export default async function AdminCategoriesPage() {
                       name="description"
                       rows={4}
                       defaultValue={category.description}
-                      placeholder="Наприклад, Базові та декоративні лабрети для різних видів пірсингу."
+                      placeholder="Базові та декоративні лабрети для різних видів пірсингу."
                     />
                   </label>
                 </div>

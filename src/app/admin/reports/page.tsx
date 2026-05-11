@@ -44,7 +44,6 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
       <div className="section-heading center">
         <p className="eyebrow">NativeSQL</p>
         <h1>Звіти та процедура</h1>
-        <p>На сторінці використано JOIN, GROUP BY, вкладений підзапит, SQL-функцію та виклик збереженої процедури.</p>
       </div>
 
       <div className="table-card">
@@ -82,8 +81,8 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
       </div>
 
       <div className="form-card">
-        <h2>Виклик збереженої процедури</h2>
-        <p>Кнопка створює тестове замовлення через процедуру create_order_from_json.</p>
+        <h2>Створення тестового замовлення</h2>
+        <p>Кнопка створює тестове замовлення через процедуру.</p>
         <a className="btn btn-primary" href="/admin/reports?procedure=run">Викликати процедуру</a>
         {procedureResult.length > 0 && <p className="status-message">Статус: {procedureResult[0].result_status}, ID замовлення: {procedureResult[0].created_order_id}</p>}
       </div>

@@ -16,12 +16,11 @@ export default async function AdminPage() {
       <div className="section-heading center">
         <p className="eyebrow">Адмін-панель</p>
         <h1>Керування LUNÉ</h1>
-        <p>Тут реалізовано роботу з сутностями, звітами, NativeSQL, транзакціями та викликом процедури.</p>
       </div>
       <div className="admin-grid">
-        <Link href="/admin/products" className="admin-card"><span>{products}</span><h2>Товари</h2><p>CRUD для товарів із зовнішнім ключем categoryId.</p></Link>
-        <Link href="/admin/categories" className="admin-card"><span>{categories}</span><h2>Категорії</h2><p>CRUD для категорій товарів.</p></Link>
-        <Link href="/admin/reports" className="admin-card"><span>{formatPrice(Number(total._sum.total || 0))}</span><h2>Звіти</h2><p>Запити з JOIN, GROUP BY, підзапитом, функцією та процедурою.</p></Link>
+        <Link href="/admin/products" className="admin-card"><span>{products}</span><h2>Товари</h2></Link>
+        <Link href="/admin/categories" className="admin-card"><span>{categories}</span><h2>Категорії</h2></Link>
+        <Link href="/admin/reports" className="admin-card"><span>{formatPrice(Number(total._sum.total || 0))}</span><h2>Звіти</h2></Link>
       </div>
       <div className="table-card">
         <h2>Останні замовлення</h2>

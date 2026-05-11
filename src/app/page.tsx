@@ -16,7 +16,7 @@ export default async function Home() {
     where: { isPopular: true },
     include: { category: true },
     orderBy: { createdAt: "desc" },
-    take: 4
+    take: 3
   });
 
   const categories = await prisma.category.findMany({ orderBy: { name: "asc" } });
@@ -28,7 +28,7 @@ export default async function Home() {
           <p className="eyebrow">Прикраси для твоєї унікальної краси</p>
           <img src="/name.png" alt="LUNÉ Piercing Boutique" />
           <h1>Piercing Boutique</h1>
-          <p>опис тексту додати</p>
+          <p>LUNÉ - це boutique-простір прикрас для пірсингу, створених для тих, хто цінує індивідуальність, стиль і виразні деталі. Обирай сережки, лабрети, кільця та засоби для догляду, які допоможуть підкреслити твою естетику й зробити образ особливим.</p>
           <div className="hero-actions">
             <Link className="btn btn-primary" href="/catalog">Переглянути каталог</Link>
           </div>

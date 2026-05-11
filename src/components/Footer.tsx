@@ -13,7 +13,7 @@ export default function Footer() {
 
           <div className="footer-info">
             <span>Телефон:</span>
-            <p>+380 67 000 00 00</p>
+            <p>+380 68 825 27 37</p>
           </div>
 
           <div className="footer-info">
@@ -32,7 +32,7 @@ export default function Footer() {
         </div>
 
         <div className="footer-brand">
-          <Link href="/" className="footer-logo">
+          <Link href="/" className="footer-logo" aria-label="LUNÉ Piercing Boutique">
             <img src="/logo.png" alt="LUNÉ Piercing Boutique" />
           </Link>
         </div>
@@ -60,26 +60,22 @@ export default function Footer() {
               <FooterAuthLink href="/checkout" requiredRole="user">
                 Оформлення
               </FooterAuthLink>
-
-              <FooterAuthLink href="/admin" requiredRole="admin">
-                Адмін-панель
-              </FooterAuthLink>
             </div>
           </div>
         </div>
       </div>
 
       <div className="footer-categories">
-  <Link href="/catalog?category=piercing-earrings">Накрутки</Link>
-  <Link href="/catalog?category=rings">Клікери</Link>
-  <Link href="/catalog?category=labrets">Лабрети</Link>
-  <Link href="/catalog?category=barbells">Штанги</Link>
-  <Link href="/catalog?category=aftercare">Засоби для догляду</Link>
-</div>
+        <Link href="/catalog?category=piercing-earrings">Накрутки</Link>
+        <Link href="/catalog?category=rings">Клікери</Link>
+        <Link href="/catalog?category=labrets">Лабрети</Link>
+        <Link href="/catalog?category=barbells">Штанги</Link>
+        <Link href="/catalog?category=aftercare">Засоби для догляду</Link>
+      </div>
 
       <div className="footer-bottom">
         <p>© 2026 LUNÉ Piercing Boutique</p>
-        <p>Прикраси для твоєї унікальної краси</p>
+        <p>Прикраси для твоєї унікальності</p>
       </div>
     </footer>
   );
