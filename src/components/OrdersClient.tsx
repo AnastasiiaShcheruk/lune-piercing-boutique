@@ -45,9 +45,10 @@ export default function OrdersClient() {
   if (!user) {
   return (
     <div className="inline-loader">
-      <img src="/logo-pic.png" alt="LUNÉ" />
-      <p>Завантаження</p>
-    </div>
+        <img src="/logo-pic.png" alt="LUNÉ" />
+        <img className="inline-loader-name" src="/name.png" alt="LUNÉ Piercing Boutique" />
+        <p>Завантаження</p>
+      </div>
   );
 }
 
@@ -61,9 +62,10 @@ export default function OrdersClient() {
 
       {loading ? (
         <div className="inline-loader">
-      <img src="/logo-pic.png" alt="LUNÉ" />
-      <p>Завантаження</p>
-    </div>
+        <img src="/logo-pic.png" alt="LUNÉ" />
+        <img className="inline-loader-name" src="/name.png" alt="LUNÉ Piercing Boutique" />
+        <p>Завантаження</p>
+      </div>
       ) : orders.length === 0 ? (
         <div className="empty-state orders-empty-page">
           <h2>Замовлень поки немає</h2>

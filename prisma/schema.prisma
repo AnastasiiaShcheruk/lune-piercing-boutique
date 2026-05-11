@@ -47,9 +47,11 @@ model Customer {
   id        Int      @id @default(autoincrement())
   name      String   @db.VarChar(120)
   email     String   @unique @db.VarChar(120)
+  password  String   @default("") @db.VarChar(120)
   phone     String   @db.VarChar(40)
   city      String   @db.VarChar(80)
   address   String   @db.VarChar(180)
+  photo     String   @default("/logo-pic.png") @db.Text
   createdAt DateTime @default(now())
   orders    Order[]
   reviews   Review[]
@@ -80,9 +82,9 @@ model OrderItem {
   order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
   product   Product @relation(fields: [productId], references: [id], onDelete: Restrict)
 
+  @@unique([orderId, productId])
   @@index([orderId])
   @@index([productId])
-  @@unique([orderId, productId])
 }
 
 model Review {

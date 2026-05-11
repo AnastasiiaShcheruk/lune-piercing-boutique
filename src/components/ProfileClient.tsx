@@ -145,9 +145,10 @@ export default function ProfileClient() {
   if (!user) {
   return (
     <div className="inline-loader">
-      <img src="/logo-pic.png" alt="LUNÉ" />
-      <p>Завантаження</p>
-    </div>
+        <img src="/logo-pic.png" alt="LUNÉ" />
+        <img className="inline-loader-name" src="/name.png" alt="LUNÉ Piercing Boutique" />
+        <p>Завантаження</p>
+      </div>
   );
 }
 

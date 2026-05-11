@@ -6,14 +6,11 @@ import { useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import {
   clearSession,
-  createUserId,
   getFullName,
   getSession,
   getUsers,
   saveSession,
-  saveUsers,
-  toSession,
-  type StoredUser
+  toSession
 } from "../lib/authStorage";
 import type { SessionUser } from "../lib/types";
 
@@ -24,6 +21,11 @@ type OpenAuthDetail = {
   role?: AuthRole;
   view?: AuthView;
   redirectTo?: string;
+};
+
+type AuthResponse = {
+  user?: SessionUser;
+  error?: string;
 };
 
 function clearGuestShopData() {
@@ -44,6 +46,7 @@ export default function AuthMenu() {
   const [view, setView] = useState<AuthView>("login");
   const [message, setMessage] = useState("");
   const [redirectAfterAuth, setRedirectAfterAuth] = useState<string | null>(null);
+  const [authLoading, setAuthLoading] = useState(false);
 
   const isAccountPage =
     pathname.startsWith("/profile") ||
@@ -192,7 +195,7 @@ export default function AuthMenu() {
     setMessage("");
   }
 
-  function handleAuth(event: FormEvent<HTMLFormElement>) {
+  async function handleAuth(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setMessage("");
 
@@ -207,54 +210,54 @@ export default function AuthMenu() {
       return;
     }
 
-    const users = getUsers();
+    if (role === "admin") {
+      const users = getUsers();
+      const foundAdmin = users.find((user) => user.role === "admin" && user.email.toLowerCase() === email && user.password === password);
 
-    if (view === "login") {
-      const foundUser = users.find((user) => user.role === role && user.email.toLowerCase() === email && user.password === password);
-
-      if (!foundUser) {
+      if (!foundAdmin) {
         setMessage("Невірний email або пароль");
         return;
       }
 
-      finishAuth(toSession(foundUser));
+      finishAuth(toSession(foundAdmin));
       return;
     }
 
-    if (role === "admin") {
-      setMessage("Реєстрація адміністратора на сайті недоступна");
-      return;
-    }
-
-    if (!firstName || !lastName) {
+    if (view === "register" && (!firstName || !lastName)) {
       setMessage("Введи ім’я та прізвище");
       return;
     }
 
-    const exists = users.some((user) => user.role === "user" && user.email.toLowerCase() === email);
+    setAuthLoading(true);
 
-    if (exists) {
-      setMessage("Користувач з таким email вже існує");
-      return;
+    try {
+      const response = await fetch(view === "login" ? "/api/auth/login" : "/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          firstName,
+          lastName,
+          email,
+          password
+        })
+      });
+
+      const data = (await response.json()) as AuthResponse;
+
+      if (!response.ok || !data.user) {
+        setMessage(data.error || "Помилка авторизації");
+        setAuthLoading(false);
+        return;
+      }
+
+      finishAuth(data.user);
+    } catch {
+      setMessage("Не вдалося з’єднатися з сервером");
     }
 
-    const newUser: StoredUser = {
-      id: createUserId(),
-      role: "user",
-      firstName,
-      lastName,
-      name: `${firstName} ${lastName}`.trim(),
-      email,
-      password,
-      photo: "/logo-pic.png",
-      phone: "",
-      city: "",
-      address: "",
-      createdAt: new Date().toISOString()
-    };
-
-    saveUsers([newUser, ...users]);
-    finishAuth(toSession(newUser));
+    setAuthLoading(false);
   }
 
   function logout() {
@@ -334,8 +337,8 @@ export default function AuthMenu() {
                   <input name="password" type="password" required placeholder="пароль" />
                 </label>
 
-                <button className="btn btn-primary" type="submit">
-                  {view === "login" || role === "admin" ? "Увійти" : "Створити акаунт"}
+                <button className="btn btn-primary" type="submit" disabled={authLoading}>
+                  {authLoading ? "Зачекай..." : view === "login" || role === "admin" ? "Увійти" : "Створити акаунт"}
                 </button>
 
                 {message && <p className="auth-message">{message}</p>}

@@ -22,6 +22,21 @@ export const defaultAdmin: StoredUser = {
   createdAt: new Date().toISOString()
 };
 
+export const demoUser: StoredUser = {
+  id: "lune-demo-user",
+  role: "user",
+  firstName: "Анастасія",
+  lastName: "Щерук",
+  name: "Анастасія Щерук",
+  email: "nastay.sheruk05@gmail.com",
+  password: "183249700Na",
+  photo: "/logo-pic.png",
+  phone: "+380688252737",
+  city: "Миколаїв",
+  address: "",
+  createdAt: new Date().toISOString()
+};
+
 export function createUserId() {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) return crypto.randomUUID();
   return `${Date.now()}-${Math.floor(Math.random() * 100000)}`;
@@ -85,7 +100,9 @@ export function normalizeStoredUser(user: Partial<StoredUser> | null) {
 }
 
 export function getUsers() {
-  if (typeof window === "undefined") return [defaultAdmin];
+  const defaultUsers = [defaultAdmin, demoUser];
+
+  if (typeof window === "undefined") return defaultUsers;
 
   const raw = window.localStorage.getItem(USERS_KEY);
   let users: StoredUser[] = [];
@@ -99,9 +116,13 @@ export function getUsers() {
     }
   }
 
-  if (!users.some((user) => user.id === defaultAdmin.id)) {
-    users = [defaultAdmin, ...users];
-  }
+  defaultUsers.forEach((defaultUser) => {
+    const exists = users.some((user) => user.id === defaultUser.id || user.email === defaultUser.email);
+
+    if (!exists) {
+      users = [defaultUser, ...users];
+    }
+  });
 
   saveUsers(users);
 
